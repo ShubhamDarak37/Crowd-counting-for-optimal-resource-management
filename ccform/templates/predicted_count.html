@@ -1,0 +1,140 @@
+{% load static %}
+{% static "images" as baseUrl %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <title>Crowd Counting for optimal resource management</title>
+<center><h1>Crowd Counting for Optimal Resource Management</h1></center> </p>
+</head>
+<style>
+
+.post {
+	text-align: center;
+	padding-top: 20px;
+	padding-left: 27%;
+
+}
+
+.post h3,p {
+	color: white;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+h1 {
+  text-shadow: 2px 2px 2px white;
+  color:gray;
+}
+.footer {
+  position: absolute;
+  bottom:0;
+  left: 0%;
+  width: 100%;
+  padding: 0px;
+  background: rgba(0,0,0,.5);
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(0,0,0,.6);
+  border-radius: 10px;
+}
+head{
+background-color:black;}
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #03e9f4;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #03e9f4;
+  color: black;
+}
+
+.topnav-right {
+  float: right;
+}
+body {
+  background-image: url("{% static 'mscnn/crowd.jpeg'%}");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+html {
+  height: 80%;
+}
+body {
+  margin:0;
+  padding:0;
+  font-family: sans-serif;
+}
+
+img {
+    height: 300px;
+    width: 300px;
+    }
+.row {
+  display: flex;
+  padding: 20px;
+}
+
+/* Create three equal columns that sits next to each other */
+.column {
+  flex: 33.33%;
+  padding: 5px;
+}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a class="active" href="">Home</a>
+  <a href="{% url 'predict_count' %}">Predict</a>
+  <a href="#Button4">Button4</a>
+  <div class="topnav-right">
+    <a href="#Logout">Logout</a>
+  </div>
+</div>
+
+<div style="padding-left:16px">
+</div>
+<div class="footer">
+<h5 style="color:white">crowd counting for optimal resource management</h5>
+</div>
+{% block content %}
+
+<div class="post">
+      <div class="row">
+        <div style="padding:20px">
+          <img src="/{{countPred.InputImage}}" alt="Input Image">
+        </div>
+        <div style="padding: 20px;">
+          <h3>Predicted Count Information:</h3>
+          <p>Date: 10 December 2020</p>
+          <p>
+            <h3>Crowd Count is {{countPred.CrowdCount}}</h3>
+          </p>
+        </div>  
+      </div>
+    </div>
+	<br>
+
+{% endblock content %}
+
+</body>
+</html>
