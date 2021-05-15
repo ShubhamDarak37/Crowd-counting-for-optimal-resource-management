@@ -118,23 +118,28 @@ img {
 </div>
 {% block content %}
 
-<div class="post">
-      <div class="row">
-        <div style="padding:20px">
-          <img src="/{{countPred.InputImage}}" alt="Input Image">
-        </div>
-        <div style="padding: 20px;">
-          <h3>Predicted Count Information:</h3>
-          <p>Date: 10 December 2020</p>
-          <p>
-            <h3>Crowd Count is {{countPred.CrowdCount}}</h3>
-          </p>
-        </div>  
-      </div>
+{% for counts in count_list %}
+
+  <div class="post">
+    <div class="row">
+          
+      <div style="padding: 20px;">
+        <h3>Predicted Count Information:</h3>
+        <p>Crowd Count is {{ counts.CrowdCount }}</p>
+        <p>Published {{ counts.CDate}}</p>
+        <p>Published {{ counts.CTime}}</p>
+        
+      </div>  
     </div>
-	<br>
+  </div>
+    <br>
+{% endfor %}
 
 {% endblock content %}
+
+
+
+
 
 </body>
 </html>

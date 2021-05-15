@@ -9,7 +9,9 @@
           <h5 class="card-title text-center"><b>Sign In</b></h5>
           <form method = "post" enctype="multipart/form-data" action="predictImage"> 
             {% csrf_token %} 
-            <div><label for="fname">Upload Image file here</label></div><input name="filePath" type="file"> <br><br> 
+            <div><label for="fname">Upload  file here</label></div><input name="filePath" type="file"> <br><br> 
+            <label for="fdate">(date):</label> <input type="date" id="fdate" name="fdate"><br><br>
+            <label for="ftime">(time):</label> <input type="time" id="ftime" name="ftime"><br><br>
             <button type="submit" value="submit">Upload</button> 
         </form> 
         </div>

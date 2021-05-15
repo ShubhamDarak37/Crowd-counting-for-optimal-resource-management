@@ -25,6 +25,7 @@ from tensorflow.keras.layers import BatchNormalization
 from tensorflow.keras.models import Model
 from tensorflow.keras.regularizers import l2
 import matplotlib.pyplot as plt
+from datetime import datetime as dt,timedelta
 
 def MSB(filters):
     """Multi-Scale Blob.
@@ -99,25 +100,67 @@ def predict_count(request):
 
 
 def predictImage(request):
-    countPred = countPrediction()
+    countPrediction.objects.all().delete()
     fileobj = request.FILES['filePath']
     fs = FileSystemStorage()
-    filepathname = fs.save("img.png",fileobj)
+    filepathname = fs.save("video.mp4",fileobj)
     filepathname=fs.url(filepathname)
-    testimage = '.'+filepathname
-    img = cv2.imread(testimage)
-    countPred.InputImage=testimage
-    img = cv2.resize(img, (224, 224))
-    img = img / 255.
-    img = np.expand_dims(img, axis=0)
+    testvideo = '.'+filepathname
+    cap = cv2.VideoCapture(testvideo)
+    btime = request.POST.get('ftime')
+    bdate = request.POST.get('fdate')
+    b = dt.strptime(btime, '%H:%M')
+    second = 5
+    images = []
+    t = []
+    seconds_added = timedelta(minutes=second)
+    fps = cap.get(cv2.CAP_PROP_FPS) # Gets the frames per second
+    multiplier = fps * second
+    success,image = cap.read()
+    while success:
+        frameId = int(round(cap.get(1))) #current frame number, rounded b/c sometimes you get frame intervals which aren't integers...this adds a little imprecision but is likely good enough
+        success, image = cap.read()
+        #print(frameId)
+        if frameId % multiplier == 0:
+            countPred = countPrediction()
+            print("hello")
+            images.append(image)
+            countPred.CTime=b
+            b = b + seconds_added
+            t.append(b)
+            img = cv2.resize(image, (224, 224))
+            img = img / 255.
+            img = np.expand_dims(img, axis=0)
     
 
-    prediction = model.predict(img)[0][:, :, 0]
-    #dmap = cv2.resize(prediction,(224,224))
-    dmap = cv2.GaussianBlur(prediction, (15, 15), 0)
+            prediction = model.predict(img)[0][:, :, 0]
+            dmap = cv2.resize(prediction,(224,224))
+            dmap = cv2.GaussianBlur(prediction, (15, 15), 0)
 
     
-    count = int(np.sum(dmap))
-    countPred.CrowdCount=count
-    context = {'filepathname':filepathname, 'count':count, 'countPred': countPred}
+            count = int(np.sum(dmap))
+            countPred.CrowdCount=count
+            
+            countPred.CDate=bdate
+            countPred.save()
+
+    count_list = countPrediction.objects.all()
+    context = {'count_list':count_list}
     return render(request,'predicted_count.html',context)
+
+#testimage = '.'+filepathname
+#img = cv2.imread(testimage)
+#countPred.InputImage=testimage
+#img = cv2.resize(img, (224, 224))
+#img = img / 255.
+#img = np.expand_dims(img, axis=0)
+
+
+#prediction = model.predict(img)[0][:, :, 0]
+#dmap = cv2.resize(prediction,(224,224))
+#dmap = cv2.GaussianBlur(prediction, (15, 15), 0)
+
+
+#count = int(np.sum(dmap))
+#countPred.CrowdCount=count
+#context = {'filepathname':filepathname, 'count':count, 'countPred': countPred}
